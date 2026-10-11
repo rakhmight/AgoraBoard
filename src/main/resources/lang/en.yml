@@ -1,0 +1,367 @@
+# AgoraBoard - English language file.
+# You can change EVERYTHING here: the prefix, colors, wording. Format: MiniMessage
+# (https://docs.advntr.dev/minimessage/format.html), e.g. <red>, <#ff8800>, <bold>,
+# <gradient:gold:yellow>text</gradient>.
+# Words in angle brackets like <player>, <amount>, <item> are placeholders - keep them as they are.
+# If a key is removed, the plugin falls back to the built-in default.
+# Apply changes with: /board admin reload
+
+# Prefix before every chat message from the plugin. Use "" to remove it.
+prefix: "<gold>[Board] </gold>"
+
+no-permission: "<red>You don't have permission to do that."
+players-only: "<red>Only players can use this command."
+unknown-sub: "<red>Unknown command. Use <yellow>/board help"
+cooldown: "<red>Wait <yellow><seconds></yellow> more seconds before creating another listing."
+
+time:
+  d: "d"
+  h: "h"
+  m: "m"
+
+usage:
+  ad: "<yellow>Usage: <white>/board ad [-c] [category] [text]<newline><gray>Categories: <white><categories><newline><gray>-c - also post it to the public chat."
+  trade: "<yellow>Usage: <white>/board trade [-c] [item you need] [amount] [item you give] [amount] ... [description]<newline><gray>You can give several items in a row.<newline><gray>Example: <white>/board trade diamond 5 iron_ingot 64 gold_ingot 32 Needed for enchanting<newline><gray>Negotiable trade: write <white>negotiable<gray> instead of what you give (the amount you need is optional). It is only an announcement, nothing is taken:<newline><white>/board trade diamond negotiable Will pay a fair price<newline><gray>Money instead of items (needs Vault): add <white>money [sum]<gray>, e.g. <white>/board trade diamond 5 money 250<gray>. The money is withdrawn and reserved right away."
+  find: "<yellow>Usage: <white>/board find [item]"
+  admin: "<yellow>Usage: <white>/board admin reload | list | remove [ad|trade] [id]"
+
+help:
+  header: "<gold>=== Bulletin Board ==="
+  open: "<yellow>/board <gray>- open the board"
+  ad: "<yellow>/board ad [category] [text] <gray>- post an announcement (categories: <white><categories><gray>; lasts <white><days><gray> days)"
+  trade: "<yellow>/board trade [item you need] [amount] [item you give] [amount] ... [description] <gray>- post a trade: what you need and what you give in return (several items allowed, and money: <white>money [sum]<gray>). Write <white>negotiable<gray> instead of what you give for a plain announcement without automatic exchange. Add a description at the end, e.g. enchantments"
+  find: "<yellow>/board find [item] <gray>- find trades involving an item"
+  claim: "<yellow>/board claim <gray>- collect items from completed trades"
+  chat: "<yellow>-c <gray>- a flag after /board ad or /board trade also posts it to the public chat, e.g. <white>/board ad -c help Looking for people to mine<gray>. Post again by clicking your own listing in the menu."
+  chat-free: "<gray>Posting to the chat is free, but at most once every <white><minutes></white> min. (the wait is shared by all your listings)."
+  chat-paid: "<gray>Posting to the chat (and every repost) costs <gold><price></gold>."
+  price-ad: "<gray>Posting an announcement costs <gold><price></gold>."
+  price-trade: "<gray>Posting a trade costs <gold><price></gold>."
+  admin: "<red>/board admin <gray>- reload, list, remove"
+
+ad:
+  category-unknown: "<red>Unknown category <yellow><input></yellow>. Available: <white><list>"
+  too-short: "<red>The text is too short (at least <yellow><min></yellow> characters)."
+  too-long: "<red>The text is too long (at most <yellow><max></yellow> characters)."
+  blocked: "<red>The text contains forbidden words."
+  limit: "<red>You already have the maximum number of announcements (<yellow><max></yellow>). Delete one in the <yellow>/board</yellow> menu."
+  created: "<green>Announcement <white>#<id></white> posted in category <category><green> for <white><days></white> days. You can delete it in the /board menu."
+  broadcast: "<white><player></white> <gray>[<category><gray>]: <white><text> <click:run_command:'/board ads'><hover:show_text:'Open the bulletin board'><yellow>[Board]</yellow></hover></click>"
+  gone: "<red>That announcement no longer exists."
+  removed: "<green>Announcement #<id> deleted."
+  removed-by-admin: "<yellow>Your announcement #<id> was removed by an administrator."
+  expired: "<yellow>Your announcement #<id> has expired and was removed from the board."
+  contact: "<gray>Author: <white><author> <click:suggest_command:'/<cmd> <author> '><hover:show_text:'Click to write'><green>[message]</green></hover></click>"
+
+trade:
+  limit: "<red>You already have the maximum number of trades (<yellow><max></yellow>). Cancel one in the <yellow>/board</yellow> menu."
+  too-many-offers: "<red>You can give at most <yellow><max></yellow> different items in one trade."
+  desc-too-long: "<red>The description is too long (at most <yellow><max></yellow> characters)."
+  same-item: "<red>You can't trade an item for itself: <white><item></white>."
+  not-enough-offer: "<red>You don't have enough items to offer: need <white><amount> x <item></white>, you have <yellow><have></yellow>."
+  need-amount: "<red>Say how many items you need. The amount can only be omitted in a negotiable trade (<white>negotiable</white>)."
+  created-negotiable: "<green>Negotiable trade <white>#<id></white> posted. It is only an announcement: you keep your items, agree on the terms with the player."
+  created-escrow: "<green>Trade <white>#<id></white> posted. The items were taken from you and are held by the board: <white><items></white>. If you cancel the trade or it expires, they are returned to you."
+  created-display: "<green>Trade <white>#<id></white> posted. You keep your items: <white><items></white>. Trade with the player in person."
+  gone: "<red>That trade no longer exists."
+  removed: "<green>Trade #<id> deleted."
+  removed-returned: "<green>Trade #<id> cancelled. Your items and reserved money were returned (anything that did not fit your inventory waits in /board claim)."
+  removed-by-admin: "<yellow>Your trade #<id> was removed by an administrator. Your money was returned, your items wait in the collection window (/board claim)."
+  not-automatic: "<red>This trade is made directly between players."
+  own: "<red>You can't trade with yourself."
+  missing: "<red>You are missing: <white><amount> x <item></white> (you have <yellow><have></yellow>). Plain items without a name, enchantments or wear are required."
+  no-space: "<red>Not enough space in your inventory for the items you would receive."
+  done: "<green>Trade complete: you gave <white><give_amount> x <give></white> and received <white><items></white>."
+  done-owner: "<green><white><player></white> accepted your trade <white>#<id></white>. You are owed <white><get_amount> x <get></white>. <click:run_command:'/board claim'><hover:show_text:'Open the collection window'><yellow>[Collect]</yellow></hover></click>"
+  broadcast: "<white><player></white> <gray>is trading: needs <white><need></white><gray>, gives <white><offers></white><gray>.<description> <click:run_command:'/board trades'><hover:show_text:'Open trading'><yellow>[Board]</yellow></hover></click>"
+  expired: "<yellow>Your trade #<id> has expired and was removed from the board."
+  expired-returned: "<yellow>Your trade #<id> has expired. Your money was returned, your items wait in the collection window (/board claim)."
+  contact: "<gray>Trade owner: <white><author> <click:suggest_command:'/<cmd> <author> '><hover:show_text:'Click to write'><green>[message]</green></hover></click>"
+  unknown-item: "<red>Unknown item: <yellow><input></yellow>. Use the in-game name, e.g. <white>diamond</white> (Tab completion works)."
+  bad-amount: "<red>Invalid amount <yellow><input></yellow>. Allowed: 1 to <white><max></white>."
+  bad-money: "<red>Invalid sum <yellow><input></yellow>. Example: <white>money 250</white> or <white>money 12.5</white>."
+  money-disabled: "<red>Offering money in trades is disabled on this server."
+  money-unavailable: "<red>Money in trades is unavailable: the server has no economy plugin (Vault)."
+  money-too-small: "<red>The sum is too small. Minimum: <gold><min></gold>."
+  money-too-large: "<red>The sum is too large. Maximum: <gold><max></gold>."
+
+# Chat posting. plain-* are plain text without colors, used by the COMMAND and PLAYER modes
+# (see chat.mode in config.yml). BROADCAST mode uses ad.broadcast and trade.broadcast.
+chat:
+  plain-ad: "[Announcement | <category>] <player>: <text>"
+  plain-ad-self: "[Announcement | <category>] <text>"
+  plain-trade: "[Trade] <player>: needs <need>, gives <offers>.<description>"
+  plain-trade-self: "[Trade] needs <need>, gives <offers>.<description>"
+  offers-negotiable: "negotiable"
+  disabled: "<red>Posting to the chat is disabled on this server."
+  cooldown: "<red>Free chat posts are limited (the wait is shared by all your listings). You can post again in <yellow><time></yellow>."
+  failed: "<red>The chat message could not be sent, ask an administrator. Your payment was refunded."
+  posted: "<green>Posted to the chat."
+  posted-paid: "<green>Posted to the chat. Charged: <gold><price></gold>."
+
+economy:
+  not-enough: "<red>Not enough money: you need <gold><price></gold>, you have <yellow><balance></yellow>."
+  charged: "<gray>Charged: <gold><price></gold>."
+  reserved: "<gray>Reserved for the trade: <gold><price></gold> (returned if you cancel or it expires)."
+  unavailable: "<red>The economy plugin is not available right now. Try again later."
+  failed: "<red>The economy refused the operation. Try again later or contact an administrator."
+
+claim:
+  none: "<gray>You have no items to collect."
+  pending: "<yellow>Items are waiting for you, they did not fit in your inventory. <click:run_command:'/board claim'><hover:show_text:'Open the collection window'><green>[Collect]</green></hover></click>"
+  join: "<yellow>Items from trades are waiting for you: <white><amount></white>. <click:run_command:'/board claim'><hover:show_text:'Open the collection window'><green>[Collect]</green></hover></click>"
+  done: "<green>Items collected: <white><amount></white>."
+  no-space: "<red>Your inventory is full."
+
+join:
+  notice: "<gray>On the board: <white><ads></white> announcements, <white><trades></white> trades. Open it with <yellow>/board"
+
+admin:
+  reloaded: "<green>Settings and texts reloaded."
+  list-ad: "<gray>Announcement #<id> by <white><player></white>: <text>"
+  list-trade: "<gray>Trade #<id> by <white><player></white>, needs: <wants>"
+
+gui:
+  prev: "<yellow>← Previous"
+  next: "<yellow>Next →"
+  page: "<white>Page <page> of <pages>"
+  back: "<yellow>Main menu"
+  back-list: "<yellow>Back to the list"
+  # only shown when posting costs money
+  price-line:
+    - ""
+    - "<gray>Posting price: <gold><price>"
+
+  manage:
+    title: "<dark_gray>Your listing"
+    gone: "<red>This listing no longer exists"
+    chat: "<gold><bold>Post to chat"
+    chat-lore-free:
+      - "<gray>Send it to everyone in the chat."
+      - "<gray>Free, once every <white><minutes></white> min."
+      - "<gray>(the wait is shared by all your listings)"
+      - ""
+      - "<yellow>Click to post"
+    chat-lore-paid:
+      - "<gray>Send it to everyone in the chat."
+      - "<gray>Price: <gold><price>"
+      - ""
+      - "<yellow>Click to post"
+    chat-lore-cooldown:
+      - "<gray>Send it to everyone in the chat."
+      - "<red>Wait <white><time></white> more"
+      - "<gray>(the wait is shared by all your listings)"
+    delete: "<red><bold>Delete"
+    delete-lore:
+      - "<gray>Remove it from the board."
+    cancel: "<red><bold>Cancel trade"
+    cancel-lore:
+      - "<gray>Your items will be returned."
+  admin-hint:
+    - ""
+    - "<red>Moderation: <gray>Shift + right click - manage (#<id>)"
+
+  main:
+    title: "<dark_gray>Bulletin Board"
+    ads:
+      name: "<green><bold>Announcements"
+      lore:
+        - "<gray>Help, gatherings, news"
+        - "<gray>and other player messages."
+        - ""
+        - "<gray>On the board: <white><total>"
+        - "<gray>Yours: <white><mine>/<max>"
+        - ""
+        - "<yellow>Click to open"
+    trades:
+      name: "<gold><bold>Trading"
+      lore-gui:
+        - "<gray>Trade items with other"
+        - "<gray>players right from the menu."
+        - ""
+        - "<gray>On the board: <white><total>"
+        - "<gray>Yours: <white><mine>/<max>"
+        - ""
+        - "<yellow>Click to open"
+      lore-natural:
+        - "<gray>Trade listings."
+        - "<gray>Trade with players in person."
+        - ""
+        - "<gray>On the board: <white><total>"
+        - "<gray>Yours: <white><mine>/<max>"
+        - ""
+        - "<yellow>Click to open"
+    claim:
+      name: "<aqua><bold>Collect items"
+      lore:
+        - "<gray>Items waiting for you: <white><amount>"
+        - ""
+        - "<yellow>Click to open"
+
+  claim:
+    title: "<dark_gray>Collect items"
+    empty: "<red>Nothing here yet"
+    empty-lore:
+      - "<gray>Payments from completed"
+      - "<gray>trades show up here."
+    entry-lore:
+      - ""
+      - "<yellow>Click to take"
+    take-all: "<green><bold>Take everything"
+    take-all-lore:
+      - "<gray>Items: <white><amount>"
+      - "<gray>Takes everything that fits."
+
+  confirm:
+    title: "<dark_gray>Confirm trade"
+    # keys are quoted: unquoted yes/no are read by YAML as true/false
+    "yes": "<green><bold>Confirm"
+    "no": "<red><bold>Cancel"
+    cancel: "<red><bold>Cancel"
+    gone: "<red>This trade is no longer available"
+    arrow: "<gray>→"
+    pay: "<red>You give: <white><amount> x <item>"
+    pay-lore-ok:
+      - "<gray>You have: <green><have>"
+    pay-lore-no:
+      - "<gray>You have: <red><have><gray> of <white><amount>"
+      - "<gray>Not enough items"
+    reward-lore:
+      - ""
+      - "<green>You receive: <white><amount> pcs."
+    more: "<gray>...and more kinds of items: <white><count>"
+    reward-money: "<gold>You receive: <price>"
+    reward-money-lore:
+      - "<gray>The money goes straight to your account."
+    info: "<aqua>About this trade"
+    info-lore:
+      - "<gray>Owner: <white><player>"
+    yes-lore:
+      - "<gray>The items go straight to you."
+    yes-lore-no:
+      - "<red>Gather the required items first."
+
+  ads:
+    title: "<dark_gray>Announcements"
+    empty: "<red>No announcements"
+    empty-lore:
+      - "<gray>Post your own with:"
+      - "<yellow>/board ad [category] [text]"
+    entry:
+      - "<gray>Author: <white><author>"
+      - "<gray>Time left: <white><time>"
+    action-own:
+      - "<yellow>Click to manage:"
+      - "<gray>post to chat or delete"
+    action-contact:
+      - "<yellow>Click to message the author"
+    delete: "<dark_gray>Delete announcement?"
+    delete-lore:
+      - "<gray>The announcement will be"
+      - "<gray>removed from the board."
+    help:
+      name: "<aqua>How to post an announcement"
+      lore:
+        - "<yellow>/board ad [category] [text]"
+        - ""
+        - "<gray>Categories: <white><categories>"
+        - "<gray>Lasts <white><days><gray> days or until you delete it."
+        - "<gray>Maximum at a time: <white><max>"
+    filter:
+      name: "<aqua>Category"
+      all: "<white>All"
+      hint:
+        - ""
+        - "<yellow>Left/right click - change"
+        - "<yellow>Shift - show all"
+    mine:
+      "on": "<green>Only mine: on"
+      "off": "<gray>Only mine: off"
+      lore:
+        - "<yellow>Click to toggle"
+
+  trade:
+    title: "<dark_gray>Trading"
+    empty: "<red>No matching trades"
+    empty-lore:
+      - "<gray>Post your own with:"
+      - "<yellow>/board trade diamond 5 iron_ingot 64"
+    seller: "<gray>Player: <white><player>"
+    want-ok: "<gray>Needs: <green>✔ <white><item> <gray>x<amount>"
+    want-no: "<gray>Needs: <red>✘ <white><item> <gray>x<amount>"
+    want-neutral: "<gray>Needs: <white><item> <gray>x<amount>"
+    want-any: "<gray>Needs: <white><item>"
+    offers-open: "<gray>Gives: <yellow>negotiable"
+    negotiable-note: "<yellow>Negotiable: <gray>no automatic exchange, agree in person"
+    offers-header: "<gray>Gives:"
+    offer-line: " <gray>• <white><item> <gray>x<amount>"
+    offer-money:
+      - " <gray>• <gold><price>"
+    description-header: "<gray>Description:"
+    expires: "<gray>Time left: <white><time>"
+    no-expiry: "<gray>No time limit"
+    action-own-escrow:
+      - "<yellow>Click to manage:"
+      - "<gray>post to chat or cancel"
+      - "<gray>(cancelling returns your items)"
+    action-own:
+      - "<yellow>Click to manage:"
+      - "<gray>post to chat or delete"
+    action-exchange:
+      - "<green>Click to trade"
+    action-missing:
+      - "<red>You don't have the required items"
+    action-contact:
+      - "<yellow>Click to message the owner"
+    delete: "<dark_gray>Delete trade?"
+    delete-lore:
+      - "<gray>The trade will be removed"
+      - "<gray>from the board."
+    delete-escrow: "<dark_gray>Cancel trade?"
+    delete-escrow-lore:
+      - "<gray>The trade will be removed and"
+      - "<gray>your items returned to you."
+    help:
+      name: "<aqua>How to post a trade"
+      lore-gui:
+        - "<yellow>/board trade [need] [amount] [give] [amount]"
+        - ""
+        - "<gray>First what YOU need, then what you give."
+        - "<gray>You can give up to <white><offers><gray> different items."
+        - "<gray>They are taken from you right away"
+        - "<gray>and held by the board."
+        - "<gray>negotiable instead of what you give -"
+        - "<gray>a plain announcement,"
+        - "<gray>no items are taken."
+        - "<gray>money [sum] - money instead of"
+        - "<gray>items (needs Vault), reserved"
+        - "<gray>right away."
+        - "<gray>Text at the end is the description."
+        - ""
+        - "<white>/board trade diamond 5 iron_ingot 64"
+        - ""
+        - "<gray>Maximum trades: <white><max>"
+        - "<gray>Duration: <white><days><gray> days (0 - no limit)"
+      lore-natural:
+        - "<yellow>/board trade [need] [amount] [give] [amount]"
+        - ""
+        - "<gray>First what YOU need, then what you give."
+        - "<gray>You keep your items,"
+        - "<gray>trade with the player in person."
+        - "<gray>negotiable - amount can be left out."
+        - "<gray>Text at the end is the description."
+        - ""
+        - "<gray>Maximum trades: <white><max>"
+        - "<gray>Duration: <white><days><gray> days (0 - no limit)"
+    view:
+      name: "<aqua>Show"
+      all: "<white>All trades"
+      affordable: "<white>Ones I can accept"
+      mine: "<white>Only mine"
+      hint:
+        - ""
+        - "<yellow>Click to change"
+    item-filter:
+      name: "<aqua>Search: <white><item>"
+      lore:
+        - "<yellow>Click to clear"

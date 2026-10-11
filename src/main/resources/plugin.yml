@@ -1,0 +1,99 @@
+name: AgoraBoard
+version: '${project.version}'
+main: dev.agoraboard.AgoraBoardPlugin
+api-version: '1.18'
+folia-supported: true
+description: Player bulletin board - announcements, item and money trades with escrow, chat posting, optional Vault prices
+softdepend: [Vault]
+commands:
+  board:
+    description: Open the bulletin board
+    usage: /<command> [help]
+    aliases: [agora, doska]
+permissions:
+  agoraboard.*:
+    description: All AgoraBoard permissions
+    default: op
+    children:
+      agoraboard.use: true
+      agoraboard.command.*: true
+      agoraboard.ad: true
+      agoraboard.trade: true
+      agoraboard.chat: true
+      agoraboard.chat.others: true
+      agoraboard.remove.*: true
+      agoraboard.unlimited: true
+      agoraboard.admin: true
+  agoraboard.use:
+    description: Open the board (/board) and use its menus
+    default: true
+  agoraboard.command.*:
+    description: All view commands (help, ads, trades, find, claim)
+    default: true
+    children:
+      agoraboard.command.help: true
+      agoraboard.command.ads: true
+      agoraboard.command.trades: true
+      agoraboard.command.find: true
+      agoraboard.command.claim: true
+  agoraboard.command.help:
+    description: /board help
+    default: true
+  agoraboard.command.ads:
+    description: /board ads
+    default: true
+  agoraboard.command.trades:
+    description: /board trades
+    default: true
+  agoraboard.command.find:
+    description: /board find
+    default: true
+  agoraboard.command.claim:
+    description: /board claim
+    default: true
+  agoraboard.ad:
+    description: Create announcements (/board ad and the menu)
+    default: true
+  agoraboard.trade:
+    description: Create and accept trades (/board trade and the menu)
+    default: true
+  agoraboard.chat:
+    description: Publish own listings to the chat
+    default: true
+  agoraboard.chat.others:
+    description: Also publish OTHER players' listings to the chat (needs agoraboard.chat; price and cooldown apply to the one who posts)
+    default: op
+  agoraboard.remove.*:
+    description: Delete other players' announcements and trades
+    default: op
+    children:
+      agoraboard.remove.ad: true
+      agoraboard.remove.trade: true
+  agoraboard.remove.ad:
+    description: Delete other players' announcements
+    default: op
+  agoraboard.remove.trade:
+    description: Cancel other players' trades (escrow goes back to the owner)
+    default: op
+  agoraboard.unlimited:
+    description: Ignore listing limits, cooldowns and prices
+    default: op
+  agoraboard.admin:
+    description: All /board admin commands, deleting listings and posting others' listings to the chat
+    default: op
+    children:
+      agoraboard.admin.reload: true
+      agoraboard.admin.list: true
+      agoraboard.admin.selftest: true
+      agoraboard.remove.ad: true
+      agoraboard.remove.trade: true
+      agoraboard.chat.others: true
+  agoraboard.admin.reload:
+    description: /board admin reload
+    default: op
+  agoraboard.admin.list:
+    description: /board admin list
+    default: op
+  agoraboard.admin.selftest:
+    description: /board admin selftest
+    default: op

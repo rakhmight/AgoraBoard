@@ -1,0 +1,366 @@
+# AgoraBoard - русский язык.
+# Здесь можно менять ВСЁ: префикс, цвета, формулировки. Формат: MiniMessage
+# (https://docs.advntr.dev/minimessage/format.html), например <red>, <#ff8800>, <bold>,
+# <gradient:gold:yellow>текст</gradient>.
+# Слова в угловых скобках вида <player>, <amount>, <item> - это подстановки, их оставляйте как есть.
+# Если ключ удалить, плагин возьмёт значение по умолчанию из встроенной версии.
+# Применить изменения: /board admin reload
+
+# Префикс перед каждым сообщением плагина в чате. Чтобы убрать - оставьте "".
+prefix: "<gold>[Доска] </gold>"
+
+no-permission: "<red>У вас нет прав на это действие."
+players-only: "<red>Эту команду может выполнить только игрок."
+unknown-sub: "<red>Неизвестная команда. Список команд: <yellow>/board help"
+cooldown: "<red>Подождите ещё <yellow><seconds></yellow> сек. перед созданием нового объявления."
+
+time:
+  d: "д"
+  h: "ч"
+  m: "м"
+
+usage:
+  ad: "<yellow>Использование: <white>/board ad [-c] [категория] [текст]<newline><gray>Категории: <white><categories><newline><gray>-c - опубликовать ещё и в общий чат."
+  trade: "<yellow>Использование: <white>/board trade [-c] [нужный предмет] [кол-во] [что отдаёте] [кол-во] ... [описание]<newline><gray>Отдавать можно несколько предметов подряд.<newline><gray>Пример: <white>/board trade diamond 5 iron_ingot 64 gold_ingot 32 Нужны для зачарования<newline><gray>Договорной обмен: вместо того, что отдаёте, напишите <white>negotiable<gray> (кол-во нужного можно не указывать). Это просто объявление, ничего не списывается:<newline><white>/board trade diamond negotiable Отдам за хорошую цену<newline><gray>Деньги вместо предметов (нужен Vault): добавьте <white>money [сумма]<gray>, например <white>/board trade diamond 5 money 250<gray>. Деньги списываются и резервируются сразу."
+  find: "<yellow>Использование: <white>/board find [предмет]"
+  admin: "<yellow>Использование: <white>/board admin reload | list | remove [ad|trade] [id]"
+
+help:
+  header: "<gold>=== Доска объявлений ==="
+  open: "<yellow>/board <gray>- открыть доску"
+  ad: "<yellow>/board ad [категория] [текст] <gray>- создать объявление (категории: <white><categories><gray>; живёт <white><days><gray> дн.)"
+  trade: "<yellow>/board trade [нужный предмет] [кол-во] [что отдаёте] [кол-во] ... [описание] <gray>- создать обмен: что вам нужно и что вы отдаёте взамен (можно несколько предметов, а также деньги: <white>money [сумма]<gray>). Вместо отдаваемого можно написать <white>negotiable<gray> (договорная) - тогда это просто объявление без автообмена. В конце можно описать условия, например зачарования"
+  find: "<yellow>/board find [предмет] <gray>- найти обмены с этим предметом"
+  claim: "<yellow>/board claim <gray>- получить предметы за завершённые обмены"
+  chat: "<yellow>-c <gray>- флаг после /board ad или /board trade публикует ещё и в общий чат, например <white>/board ad -c help Ищу людей в шахту<gray>. Повторно - кликом по своему объявлению в меню."
+  chat-free: "<gray>В чат можно бесплатно, но не чаще раза в <white><minutes></white> мин. (пауза общая на все ваши объявления и обмены)."
+  chat-paid: "<gray>Публикация в чат (и каждая повторная) стоит <gold><price></gold>."
+  price-ad: "<gray>Размещение объявления стоит <gold><price></gold>."
+  price-trade: "<gray>Размещение обмена стоит <gold><price></gold>."
+  admin: "<red>/board admin <gray>- reload, list, remove"
+
+ad:
+  category-unknown: "<red>Неизвестная категория <yellow><input></yellow>. Доступно: <white><list>"
+  too-short: "<red>Текст слишком короткий (минимум <yellow><min></yellow> символов)."
+  too-long: "<red>Текст слишком длинный (максимум <yellow><max></yellow> символов)."
+  blocked: "<red>В тексте есть запрещённые слова."
+  limit: "<red>У вас уже максимум объявлений (<yellow><max></yellow>). Удалите одно в меню <yellow>/board</yellow>."
+  created: "<green>Объявление <white>#<id></white> опубликовано в категории <category><green> на <white><days></white> дн. Удалить его можно в меню /board."
+  broadcast: "<white><player></white> <gray>[<category><gray>]: <white><text> <click:run_command:'/board ads'><hover:show_text:'Открыть доску объявлений'><yellow>[Доска]</yellow></hover></click>"
+  gone: "<red>Этого объявления уже нет."
+  removed: "<green>Объявление #<id> удалено."
+  removed-by-admin: "<yellow>Ваше объявление #<id> удалено администратором."
+  expired: "<yellow>Срок вашего объявления #<id> истёк, оно убрано с доски."
+  contact: "<gray>Автор: <white><author> <click:suggest_command:'/<cmd> <author> '><hover:show_text:'Нажмите, чтобы написать'><green>[написать]</green></hover></click>"
+
+trade:
+  limit: "<red>У вас уже максимум обменов (<yellow><max></yellow>). Отмените один в меню <yellow>/board</yellow>."
+  too-many-offers: "<red>Можно отдавать не больше <yellow><max></yellow> разных предметов в одном обмене."
+  desc-too-long: "<red>Описание слишком длинное (максимум <yellow><max></yellow> символов)."
+  same-item: "<red>Нельзя менять предмет на него же: <white><item></white>."
+  not-enough-offer: "<red>Вам не хватает предметов для обмена: нужно <white><amount> x <item></white>, у вас <yellow><have></yellow>."
+  need-amount: "<red>Укажите, сколько нужно предметов. Количество можно пропустить только в договорном обмене (<white>negotiable</white>)."
+  created-negotiable: "<green>Договорной обмен <white>#<id></white> опубликован. Это просто объявление: предметы остались у вас, условия обсуждайте с игроком."
+  created-escrow: "<green>Обмен <white>#<id></white> опубликован. Предметы сняты с вас и лежат на доске: <white><items></white>. Если вы отмените обмен или срок истечёт, они вернутся к вам."
+  created-display: "<green>Обмен <white>#<id></white> опубликован. Предметы остались у вас: <white><items></white>. Обмениваться нужно лично с игроком."
+  gone: "<red>Этого обмена уже нет."
+  removed: "<green>Обмен #<id> удалён."
+  removed-returned: "<green>Обмен #<id> отменён. Предметы и зарезервированные деньги возвращены (то, что не поместилось в инвентарь, ждёт в /board claim)."
+  removed-by-admin: "<yellow>Ваш обмен #<id> удалён администратором. Деньги возвращены, предметы ждут в окне получения (/board claim)."
+  not-automatic: "<red>Этот обмен проходит напрямую между игроками."
+  own: "<red>Нельзя обменяться с самим собой."
+  missing: "<red>Вам не хватает: <white><amount> x <item></white> (у вас <yellow><have></yellow>). Подходят обычные предметы без названия, чар и износа."
+  no-space: "<red>В инвентаре нет места для полученных предметов."
+  done: "<green>Обмен выполнен: вы отдали <white><give_amount> x <give></white> и получили <white><items></white>."
+  done-owner: "<green><white><player></white> принял ваш обмен <white>#<id></white>. Вам причитается <white><get_amount> x <get></white>. <click:run_command:'/board claim'><hover:show_text:'Открыть окно получения'><yellow>[Забрать]</yellow></hover></click>"
+  broadcast: "<white><player></white> <gray>меняет: нужно <white><need></white><gray>, отдаёт <white><offers></white><gray>.<description> <click:run_command:'/board trades'><hover:show_text:'Открыть обмен'><yellow>[Доска]</yellow></hover></click>"
+  expired: "<yellow>Срок вашего обмена #<id> истёк, он убран с доски."
+  expired-returned: "<yellow>Срок вашего обмена #<id> истёк. Деньги возвращены, предметы ждут в окне получения (/board claim)."
+  contact: "<gray>Владелец обмена: <white><author> <click:suggest_command:'/<cmd> <author> '><hover:show_text:'Нажмите, чтобы написать'><green>[написать]</green></hover></click>"
+  unknown-item: "<red>Неизвестный предмет: <yellow><input></yellow>. Используйте название из игры, например <white>diamond</white> (работает Tab)."
+  bad-amount: "<red>Некорректное количество <yellow><input></yellow>. Допустимо от 1 до <white><max></white>."
+  bad-money: "<red>Некорректная сумма <yellow><input></yellow>. Пример: <white>money 250</white> или <white>money 12.5</white>."
+  money-disabled: "<red>Предлагать деньги в обменах отключено на этом сервере."
+  money-unavailable: "<red>Деньги в обменах недоступны: на сервере нет плагина экономики (Vault)."
+  money-too-small: "<red>Сумма слишком мала. Минимум: <gold><min></gold>."
+  money-too-large: "<red>Сумма слишком велика. Максимум: <gold><max></gold>."
+
+# Публикация в общий чат. plain-* - обычный текст без цветов: он нужен режимам COMMAND и PLAYER
+# (см. chat.mode в config.yml). В режиме BROADCAST используются ad.broadcast и trade.broadcast.
+chat:
+  plain-ad: "[Объявление | <category>] <player>: <text>"
+  plain-ad-self: "[Объявление | <category>] <text>"
+  plain-trade: "[Обмен] <player>: нужно <need>, отдаёт <offers>.<description>"
+  plain-trade-self: "[Обмен] нужно <need>, отдаёт <offers>.<description>"
+  offers-negotiable: "договорная"
+  disabled: "<red>Публикация в чат отключена на сервере."
+  cooldown: "<red>Бесплатно писать в чат можно не чаще, чем раз в несколько минут (пауза общая на все ваши объявления). Следующая публикация через <yellow><time></yellow>."
+  failed: "<red>Не удалось отправить сообщение в чат, обратитесь к администратору. Деньги за публикацию возвращены."
+  posted: "<green>Опубликовано в чат."
+  posted-paid: "<green>Опубликовано в чат. Списано: <gold><price></gold>."
+
+economy:
+  not-enough: "<red>Недостаточно средств: нужно <gold><price></gold>, у вас <yellow><balance></yellow>."
+  charged: "<gray>Списано: <gold><price></gold>."
+  reserved: "<gray>Зарезервировано под обмен: <gold><price></gold> (вернётся при отмене или по окончании срока)."
+  unavailable: "<red>Плагин экономики сейчас недоступен. Попробуйте позже."
+  failed: "<red>Экономика отклонила операцию. Попробуйте позже или обратитесь к администратору."
+
+claim:
+  none: "<gray>У вас нет предметов к получению."
+  pending: "<yellow>Для вас есть предметы, они не поместились в инвентарь. <click:run_command:'/board claim'><hover:show_text:'Открыть окно получения'><green>[Забрать]</green></hover></click>"
+  join: "<yellow>Вас ждут предметы за обмены: <white><amount></white> шт. <click:run_command:'/board claim'><hover:show_text:'Открыть окно получения'><green>[Забрать]</green></hover></click>"
+  done: "<green>Получено предметов: <white><amount></white>."
+  no-space: "<red>В инвентаре нет места."
+
+join:
+  notice: "<gray>На доске объявлений: <white><ads></white>, обменов: <white><trades></white>. Открыть: <yellow>/board"
+
+admin:
+  reloaded: "<green>Настройки и тексты перезагружены."
+  list-ad: "<gray>Объявление #<id> от <white><player></white>: <text>"
+  list-trade: "<gray>Обмен #<id> от <white><player></white>, нужно: <wants>"
+
+gui:
+  prev: "<yellow>← Назад"
+  next: "<yellow>Вперёд →"
+  page: "<white>Страница <page> из <pages>"
+  back: "<yellow>В главное меню"
+  back-list: "<yellow>Назад к списку"
+  # показывается только если размещение платное
+  price-line:
+    - ""
+    - "<gray>Цена размещения: <gold><price>"
+
+  manage:
+    title: "<dark_gray>Ваша запись"
+    gone: "<red>Записи уже нет"
+    chat: "<gold><bold>Опубликовать в чат"
+    chat-lore-free:
+      - "<gray>Отправить всем в общий чат."
+      - "<gray>Бесплатно, раз в <white><minutes></white> мин."
+      - "<gray>(пауза общая на все ваши записи)"
+      - ""
+      - "<yellow>Нажмите, чтобы опубликовать"
+    chat-lore-paid:
+      - "<gray>Отправить всем в общий чат."
+      - "<gray>Цена: <gold><price>"
+      - ""
+      - "<yellow>Нажмите, чтобы опубликовать"
+    chat-lore-cooldown:
+      - "<gray>Отправить всем в общий чат."
+      - "<red>Подождите ещё <white><time>"
+      - "<gray>(пауза общая на все ваши записи)"
+    delete: "<red><bold>Удалить"
+    delete-lore:
+      - "<gray>Убрать запись с доски."
+    cancel: "<red><bold>Отменить обмен"
+    cancel-lore:
+      - "<gray>Предметы вернутся к вам."
+  admin-hint:
+    - ""
+    - "<red>Модерация: <gray>Shift + ПКМ - управление (#<id>)"
+
+  main:
+    title: "<dark_gray>Доска объявлений"
+    ads:
+      name: "<green><bold>Объявления"
+      lore:
+        - "<gray>Помощь, сбор людей, новости"
+        - "<gray>и другие сообщения игроков."
+        - ""
+        - "<gray>На доске: <white><total>"
+        - "<gray>Ваших: <white><mine>/<max>"
+        - ""
+        - "<yellow>Нажмите, чтобы открыть"
+    trades:
+      name: "<gold><bold>Обмен"
+      lore-gui:
+        - "<gray>Обменивайтесь предметами"
+        - "<gray>прямо через меню."
+        - ""
+        - "<gray>На доске: <white><total>"
+        - "<gray>Ваших: <white><mine>/<max>"
+        - ""
+        - "<yellow>Нажмите, чтобы открыть"
+      lore-natural:
+        - "<gray>Объявления об обмене."
+        - "<gray>Обмениваться нужно лично."
+        - ""
+        - "<gray>На доске: <white><total>"
+        - "<gray>Ваших: <white><mine>/<max>"
+        - ""
+        - "<yellow>Нажмите, чтобы открыть"
+    claim:
+      name: "<aqua><bold>Получить предметы"
+      lore:
+        - "<gray>Вас ждут предметы: <white><amount>"
+        - ""
+        - "<yellow>Нажмите, чтобы открыть"
+
+  claim:
+    title: "<dark_gray>Получение предметов"
+    empty: "<red>Здесь пока пусто"
+    empty-lore:
+      - "<gray>Сюда попадают предметы за"
+      - "<gray>завершённые обмены."
+    entry-lore:
+      - ""
+      - "<yellow>Нажмите, чтобы забрать"
+    take-all: "<green><bold>Забрать всё"
+    take-all-lore:
+      - "<gray>Предметов: <white><amount>"
+      - "<gray>Заберётся всё, что поместится."
+
+  confirm:
+    title: "<dark_gray>Подтверждение обмена"
+    # ключи в кавычках: без них YAML читает yes/no как true/false
+    "yes": "<green><bold>Подтвердить"
+    "no": "<red><bold>Отмена"
+    cancel: "<red><bold>Отмена"
+    gone: "<red>Этот обмен уже недоступен"
+    arrow: "<gray>→"
+    pay: "<red>Вы отдадите: <white><amount> x <item>"
+    pay-lore-ok:
+      - "<gray>У вас: <green><have>"
+    pay-lore-no:
+      - "<gray>У вас: <red><have><gray> из <white><amount>"
+      - "<gray>Не хватает предметов"
+    reward-lore:
+      - ""
+      - "<green>Вы получите: <white><amount> шт."
+    more: "<gray>...и ещё видов предметов: <white><count>"
+    reward-money: "<gold>Вы получите: <price>"
+    reward-money-lore:
+      - "<gray>Деньги сразу поступят на ваш счёт."
+    info: "<aqua>Об обмене"
+    info-lore:
+      - "<gray>Владелец: <white><player>"
+    yes-lore:
+      - "<gray>Предметы сразу попадут к вам."
+    yes-lore-no:
+      - "<red>Сначала соберите нужные предметы."
+
+  ads:
+    title: "<dark_gray>Объявления"
+    empty: "<red>Объявлений нет"
+    empty-lore:
+      - "<gray>Создайте своё командой:"
+      - "<yellow>/board ad [категория] [текст]"
+    entry:
+      - "<gray>Автор: <white><author>"
+      - "<gray>Осталось: <white><time>"
+    action-own:
+      - "<yellow>Нажмите, чтобы управлять:"
+      - "<gray>опубликовать в чат или удалить"
+    action-contact:
+      - "<yellow>Нажмите, чтобы написать автору"
+    delete: "<dark_gray>Удалить объявление?"
+    delete-lore:
+      - "<gray>Объявление исчезнет с доски."
+    help:
+      name: "<aqua>Как создать объявление"
+      lore:
+        - "<yellow>/board ad [категория] [текст]"
+        - ""
+        - "<gray>Категории: <white><categories>"
+        - "<gray>Живёт <white><days><gray> дн. или пока вы его не удалите."
+        - "<gray>Максимум одновременно: <white><max>"
+    filter:
+      name: "<aqua>Категория"
+      all: "<white>Все"
+      hint:
+        - ""
+        - "<yellow>ЛКМ/ПКМ - сменить"
+        - "<yellow>Shift - показать все"
+    mine:
+      "on": "<green>Только мои: вкл"
+      "off": "<gray>Только мои: выкл"
+      lore:
+        - "<yellow>Нажмите, чтобы переключить"
+
+  trade:
+    title: "<dark_gray>Обмен"
+    empty: "<red>Подходящих обменов нет"
+    empty-lore:
+      - "<gray>Создайте свой командой:"
+      - "<yellow>/board trade diamond 5 iron_ingot 64"
+    seller: "<gray>Игрок: <white><player>"
+    want-ok: "<gray>Нужно: <green>✔ <white><item> <gray>x<amount>"
+    want-no: "<gray>Нужно: <red>✘ <white><item> <gray>x<amount>"
+    want-neutral: "<gray>Нужно: <white><item> <gray>x<amount>"
+    want-any: "<gray>Нужно: <white><item>"
+    offers-open: "<gray>Отдаёт: <yellow>договорная"
+    negotiable-note: "<yellow>Договорной обмен: <gray>без автообмена, условия лично"
+    offers-header: "<gray>Отдаёт:"
+    offer-line: " <gray>• <white><item> <gray>x<amount>"
+    offer-money:
+      - " <gray>• <gold><price>"
+    description-header: "<gray>Описание:"
+    expires: "<gray>Осталось: <white><time>"
+    no-expiry: "<gray>Без срока"
+    action-own-escrow:
+      - "<yellow>Нажмите, чтобы управлять:"
+      - "<gray>опубликовать в чат или отменить"
+      - "<gray>(при отмене предметы вернутся к вам)"
+    action-own:
+      - "<yellow>Нажмите, чтобы управлять:"
+      - "<gray>опубликовать в чат или удалить"
+    action-exchange:
+      - "<green>Нажмите, чтобы обменять"
+    action-missing:
+      - "<red>У вас нет нужных предметов"
+    action-contact:
+      - "<yellow>Нажмите, чтобы написать владельцу"
+    delete: "<dark_gray>Удалить обмен?"
+    delete-lore:
+      - "<gray>Обмен исчезнет с доски."
+    delete-escrow: "<dark_gray>Отменить обмен?"
+    delete-escrow-lore:
+      - "<gray>Обмен исчезнет, а предметы"
+      - "<gray>вернутся к вам."
+    help:
+      name: "<aqua>Как создать обмен"
+      lore-gui:
+        - "<yellow>/board trade [нужное] [кол-во] [отдаёте] [кол-во]"
+        - ""
+        - "<gray>Сначала то, что нужно ВАМ, потом то,"
+        - "<gray>что вы отдаёте. Отдавать можно до <white><offers><gray>"
+        - "<gray>разных предметов. Они снимаются с вас"
+        - "<gray>сразу и лежат на доске."
+        - "<gray>negotiable вместо отдаваемого -"
+        - "<gray>договорная: просто объявление,"
+        - "<gray>предметы не списываются."
+        - "<gray>money [сумма] - деньги вместо"
+        - "<gray>предметов (нужен Vault), они"
+        - "<gray>резервируются сразу."
+        - "<gray>Текст в конце - описание."
+        - ""
+        - "<white>/board trade diamond 5 iron_ingot 64"
+        - ""
+        - "<gray>Максимум обменов: <white><max>"
+        - "<gray>Срок: <white><days><gray> дн. (0 - без срока)"
+      lore-natural:
+        - "<yellow>/board trade [нужное] [кол-во] [отдаёте] [кол-во]"
+        - ""
+        - "<gray>Сначала то, что нужно ВАМ, потом то,"
+        - "<gray>что вы отдаёте. Предметы остаются у вас,"
+        - "<gray>обмениваться нужно лично."
+        - "<gray>negotiable - договорная (кол-во можно"
+        - "<gray>не указывать)."
+        - "<gray>Текст в конце - описание."
+        - ""
+        - "<gray>Максимум обменов: <white><max>"
+        - "<gray>Срок: <white><days><gray> дн. (0 - без срока)"
+    view:
+      name: "<aqua>Показывать"
+      all: "<white>Все обмены"
+      affordable: "<white>Те, что я могу принять"
+      mine: "<white>Только мои"
+      hint:
+        - ""
+        - "<yellow>Нажмите, чтобы сменить"
+    item-filter:
+      name: "<aqua>Поиск: <white><item>"
+      lore:
+        - "<yellow>Нажмите, чтобы сбросить"
